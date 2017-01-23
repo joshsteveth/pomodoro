@@ -61,7 +61,9 @@ func sendNotif(msg *MessageConfig) {
 		args = append(args, []string{"-i", msg.Icon}...)
 	}
 
-	args = append(args, []string{msg.Title, msg.Message}...)
+	notifMsg := fmt.Sprintf("%s\nTime Now: %s", msg.Message, time.Now().Format("15:04:05"))
+
+	args = append(args, []string{msg.Title, notifMsg}...)
 	cmd := exec.Command("notify-send", args...)
 	cmd.Run()
 }
