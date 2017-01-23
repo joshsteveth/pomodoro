@@ -39,7 +39,7 @@ func pomodoro() {
 		select {
 		case str := <-ch:
 			msg := ConfigData.Message[str]
-			sendNotif(msg)
+			go sendNotif(msg)
 
 			time.Sleep(msg.duration)
 			ch <- reverse(str)

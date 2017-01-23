@@ -1,6 +1,7 @@
 package main
 
 import (
+	"errors"
 	"time"
 
 	"gopkg.in/gcfg.v1"
@@ -38,6 +39,9 @@ type (
 
 var (
 	ConfigData Config
+
+	noPauseError = errors.New("Pause config is not found")
+	noWorkError  = errors.New("Work config is not found")
 )
 
 //Read config using gcfg lib
@@ -54,7 +58,17 @@ func readConfig(filePath string) error {
 //basic validation for config data
 //it is necessary to make sure that the program is runnning properly
 func (c *Config) validate() error {
-	for _, msg := range c.Message {
+	if msg, ok := c.Message[pause]; !ok {
+		return noPauseError
+	} else {
+		if err := msg.validate(); err != nil {
+			return err
+		}
+	}
+
+	if msg, ok := c.Message[work]; !ok {
+		return noWorkError
+	} else {
 		if err := msg.validate(); err != nil {
 			return err
 		}
